@@ -1,0 +1,31 @@
+{
+    "name": "###namespace###/###bundle_name###",
+    "type": "contao-bundle",
+    "license": "LGPL-3.0-or-later",
+    "description": "###Bundle_Name### Bundle.",
+    "keywords": [
+        "contao",
+        "theme",
+        "website",
+        "configuration",
+        "design",
+        "ui",
+        "ux"
+    ],    
+    "version": "dev-main",
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "contao/core-bundle": "^4.9 || ^5.0"
+        },
+    "autoload": {
+        "psr-4": {
+            "###Namespace###\\###BundleName###\\": "src/"
+        }
+    },
+    "extra": {
+        "contao-manager-plugin": "###Namespace###\\###BundleName###\\ContaoManager\\Plugin"
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}

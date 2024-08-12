@@ -1,0 +1,7 @@
+<?php
+
+/**
+* @package   [###bundle_name###]
+###Copyright###
+*/
+
