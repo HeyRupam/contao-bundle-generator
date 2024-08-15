@@ -10,7 +10,7 @@ import { processAndAddFileToZip, toSnakeCase } from "@/app/utils/fileUtils";
 export async function POST(req: NextRequest) {
   // Extract any necessary data from the request body if needed
   const body = await req.json();
-  const { bundleName, namespace, copyright, route } = body;
+  const { bundleName, namespace, copyright, route, bootstrapCss, fontAwesomeCss, fancyboxCss, bootstrapJs, fancyboxJs, jqueryJs, wowJs } = body;
   
   // Set up the ZIP archive
   const archive = archiver('zip', {
@@ -34,9 +34,18 @@ export async function POST(req: NextRequest) {
     const configPath = path.join(process.cwd(), 'files', 'config.php.txt');
     const servicesPath = path.join(process.cwd(), 'files', 'services.yaml.txt');
     const routesPath = path.join(process.cwd(), 'files', 'routes.yaml.txt');
+    //css
+    const bootstrapCssPath = path.join(process.cwd(), 'files', 'css', 'bootstrap.min.css');
+    const fontAwesomeCssPath = path.join(process.cwd(), 'files', 'css', 'font-awesome.min.css');
+    const fancyboxCssPath = path.join(process.cwd(), 'files', 'css', 'jquery.fancybox.min.css');
+    //js
+    const bootstrapJsPath = path.join(process.cwd(), 'files', 'js', 'bootstrap.min.js');
+    const fancyboxJsPath = path.join(process.cwd(), 'files', 'js', 'jquery.fancybox.min.js');
+    const jqueryJsPath = path.join(process.cwd(), 'files', 'js', 'jquery.min.js');
+    const wowJsPath = path.join(process.cwd(), 'files', 'js', 'wow.min.js');
+
 
     const bundleNameSnakeCase = toSnakeCase(bundleName);
-    console.log(body);
     
     try {
       // Use the reusable function to process and add the file content to the ZIP archive
@@ -50,7 +59,29 @@ export async function POST(req: NextRequest) {
       processAndAddFileToZip(archive, servicesPath, `${bundleNameSnakeCase}/config/services.yaml`, {});
       if(route){
         processAndAddFileToZip(archive, routesPath, `${bundleNameSnakeCase}/config/routes.yaml`, {});
+        processAndAddFileToZip(archive, routesPath, `${bundleNameSnakeCase}/src/Controller/`, {});
       }
+      if(bootstrapCss){
+        processAndAddFileToZip(archive, bootstrapCssPath, `${bundleNameSnakeCase}/public/css/bootstrap.min.css`, {});
+      }
+      if(fontAwesomeCss){
+        processAndAddFileToZip(archive, fontAwesomeCssPath, `${bundleNameSnakeCase}/public/css/font-awesome.min.css`, {});
+      }
+      if(fancyboxCss){
+        processAndAddFileToZip(archive, fancyboxCssPath, `${bundleNameSnakeCase}/public/css/jquery.fancybox.min.css`, {});
+      }
+      if(bootstrapJs){
+        processAndAddFileToZip(archive, bootstrapJsPath, `${bundleNameSnakeCase}/public/js/bootstrap.min.js`, {});
+      }
+      if(fancyboxJs){
+        processAndAddFileToZip(archive, fancyboxJsPath, `${bundleNameSnakeCase}/public/js/jquery.fancybox.min.js`, {});
+      }
+      if(jqueryJs){
+        processAndAddFileToZip(archive, jqueryJsPath, `${bundleNameSnakeCase}/public/js/jquery.min.js`, {});
+      }
+      if(wowJs){
+        processAndAddFileToZip(archive, wowJsPath, `${bundleNameSnakeCase}/public/js/wow.min.js`, {});
+      } 
     } catch (err) {
       return NextResponse.json({ error: err.message }, { status: 500 });
     }
@@ -69,7 +100,8 @@ export async function POST(req: NextRequest) {
   return new NextResponse(archiveStream, {
     headers: {
       'Content-Type': 'application/zip',
-      'Content-Disposition': 'attachment; filename=my-archive.zip',
+      'Content-Disposition': 'attachment; filename=${bundleNameSnakeCase}.zip',
+      'X-Bundle-Name': bundleNameSnakeCase
     },
   });
 }

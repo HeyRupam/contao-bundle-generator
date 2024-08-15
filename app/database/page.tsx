@@ -1,12 +1,17 @@
 "use client";
 
-const Home = () => {
+import { FC } from "react";
+import DbForm from "../components/DbForm";
 
+const Home: FC = () => {
+  const handleFormSubmit = async (tableName: string) => {
+    console.log(tableName);
+  }
 
   return (
-    <div className="text-center mt-20">
-        Coming soon...
-    </div>
+    <main className="min-h-screen">
+      <DbForm onSubmit={handleFormSubmit} />
+    </main>
   );
 };
 
