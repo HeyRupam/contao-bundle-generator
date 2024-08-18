@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import Select, { SingleValue } from 'react-select';
 
 // Define the type for the options
@@ -39,9 +39,10 @@ const options = [
 
 interface DcaFormProps {
     addNewField: number;
+    onChange: (index: number, data: any) => void; // Callback function
 }
 
-export default function DcaForm({ addNewField }: DcaFormProps) {
+const DcaForm: FC<DcaFormProps> = ({ addNewField, onChange }) => {
 
     const [field, setField] = useState('');
     const [evals, setEvals] = useState('');
@@ -62,6 +63,27 @@ export default function DcaForm({ addNewField }: DcaFormProps) {
     // Handler for select change
     const handleSelectChange = (selectedOption: SingleValue<OptionType>) => {
         setFieldType(selectedOption ? selectedOption.value : '');
+    };
+
+     // Call onChange when any state changes
+     const handleChange = () => {
+        onChange(addNewField, {
+            field,
+            evals,
+            optionsValue,
+            fieldType,
+            sqlType,
+            sqlLength,
+            sqlDefault,
+            sqlNullable,
+            sqlUnsigned,
+            sqlAutoIncrement,
+            otherExclude,
+            otherToggle,
+            otherSearch,
+            otherSorting,
+            otherFilter,
+        });
     };
 
     // Custom styles for react-select
@@ -102,11 +124,16 @@ export default function DcaForm({ addNewField }: DcaFormProps) {
         }),
     };
 
+    const handleInputChange = (setter: React.Dispatch<React.SetStateAction<any>>) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        setter(e.target.value);
+        handleChange();
+    };
+    
     return (
         <div className="grid grid-cols-2 gap-4 border border-gray-700 p-2 rounded my-5">
             <div className="mb-5">
                 <label htmlFor={`field_${addNewField}`} className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Field Name</label>
-                <input value={field} onChange={e => setField(e.target.value)} type="text" id={`field_${addNewField}`} name={`field_${addNewField}`} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                <input value={field} onChange={handleInputChange(setField)} type="text" id={`field_${addNewField}`} name={`field_${addNewField}`} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
             </div>
             <div className="mb-5">
                 <label htmlFor="fields" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Field Type</label>
@@ -122,58 +149,60 @@ export default function DcaForm({ addNewField }: DcaFormProps) {
             </div>
             <div className="mb-5">
                 <label htmlFor={`evals_${addNewField}`} className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Evals</label>
-                <input value={evals} onChange={e => setEvals(e.target.value)} type="text" id={`evals_${addNewField}`} name={`evals_${addNewField}`} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                <input value={evals} onChange={handleInputChange(setEvals)} type="text" id={`evals_${addNewField}`} name={`evals_${addNewField}`} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
             </div>
             {fieldType === 'select' && (
                 <div className="mb-5">
                     <label htmlFor={`options_${addNewField}`} className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Options</label>
-                    <input value={optionsValue} onChange={e => setOptionsValue(e.target.value)} type="text" id={`options_${addNewField}`} name={`options_${addNewField}`} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                    <input value={optionsValue} onChange={handleInputChange(setOptionsValue)} type="text" id={`options_${addNewField}`} name={`options_${addNewField}`} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
                 </div>
             )}
             <h3 className='text-lg col-span-2 text-center'>SQL</h3>
             <hr className='col-span-2 border-gray-700' />
             <div className="mb-5">
                 <label htmlFor={`sql_type_${addNewField}`} className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Type</label>
-                <input value={sqlType} onChange={e => setSqlType(e.target.value)} type="text" id={`sql_type_${addNewField}`} name={`sql_type_${addNewField}`} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                <input value={sqlType} onChange={handleInputChange(setSqlType)} type="text" id={`sql_type_${addNewField}`} name={`sql_type_${addNewField}`} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
             </div>
             <div className="mb-5">
                 <label htmlFor={`sql_length_${addNewField}`} className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Length</label>
-                <input value={sqlLength} onChange={e => setSqlLength(e.target.value)} type="number" id={`sql_length_${addNewField}`} name={`sql_length_${addNewField}`} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                <input value={sqlLength} onChange={handleInputChange(setSqlLength)} type="number" id={`sql_length_${addNewField}`} name={`sql_length_${addNewField}`} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
             </div>
             <div className="mb-5">
                 <label htmlFor={`sql_default_${addNewField}`} className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Default</label>
-                <input value={sqlDefault} onChange={e => setSqlDefault(e.target.value)} type="text" id={`sql_default_${addNewField}`} name={`sql_default_${addNewField}`} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                <input value={sqlDefault} onChange={handleInputChange(setSqlDefault)} type="text" id={`sql_default_${addNewField}`} name={`sql_default_${addNewField}`} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
             </div>
             <div className='grid grid-cols-3 align-middle'>
                 <div className="mb-5">
-                    <input type='checkbox' name={`sql_nullable_${addNewField}`} id={`sql_nullable_${addNewField}`} onChange={(e) => setSqlNullable(e.target.checked)} checked={sqlNullable} /> <label htmlFor={`sql_nullable_${addNewField}`}>Nullable</label>
+                    <input type='checkbox' name={`sql_nullable_${addNewField}`} id={`sql_nullable_${addNewField}`} onChange={handleInputChange(setSqlNullable)} checked={sqlNullable} /> <label htmlFor={`sql_nullable_${addNewField}`}>Nullable</label>
                 </div>
                 <div className="mb-5">
-                    <input type='checkbox' name={`sql_unsinged_${addNewField}`} id={`sql_unsinged_${addNewField}`} onChange={(e) => setSqlUnsinged(e.target.checked)} checked={sqlUnsigned} /> <label htmlFor={`sql_unsinged_${addNewField}`}>Unsigned</label>
+                    <input type='checkbox' name={`sql_unsinged_${addNewField}`} id={`sql_unsinged_${addNewField}`} onChange={handleInputChange(setSqlUnsinged)} checked={sqlUnsigned} /> <label htmlFor={`sql_unsinged_${addNewField}`}>Unsigned</label>
                 </div>
                 <div className="mb-5">
-                    <input type='checkbox' name={`sql_autoincrement_${addNewField}`} id={`sql_autoincrement_${addNewField}`} onChange={(e) => setSqlAutoIncrement(e.target.checked)} checked={sqlAutoIncrement} /> <label htmlFor={`sql_autoincrement_${addNewField}`}>Auto Incremnt</label>
+                    <input type='checkbox' name={`sql_autoincrement_${addNewField}`} id={`sql_autoincrement_${addNewField}`} onChange={handleInputChange(setSqlAutoIncrement)} checked={sqlAutoIncrement} /> <label htmlFor={`sql_autoincrement_${addNewField}`}>Auto Incremnt</label>
                 </div>
             </div>
             <h3 className='text-lg col-span-2 text-center'>Others</h3>
             <hr className='col-span-2 border-gray-700' />
             <div className='grid grid-cols-5 col-span-2 align-middle'>
                 <div className="mb-5">
-                    <input type='checkbox' name={`others_exclude_${addNewField}`} id={`others_exclude_${addNewField}`} onChange={(e) => setOtherExclude(e.target.checked)} checked={otherExclude} /> <label htmlFor={`others_exclude_${addNewField}`}>Exclude</label>
+                    <input type='checkbox' name={`others_exclude_${addNewField}`} id={`others_exclude_${addNewField}`} onChange={handleInputChange(setOtherExclude)} checked={otherExclude} /> <label htmlFor={`others_exclude_${addNewField}`}>Exclude</label>
                 </div>
                 <div className="mb-5">
-                    <input type='checkbox' name={`others_toggle_${addNewField}`} id={`others_toggle_${addNewField}`} onChange={(e) => setOtherToggle(e.target.checked)} checked={otherToggle} /> <label htmlFor={`others_toggle_${addNewField}`}>Toggle</label>
+                    <input type='checkbox' name={`others_toggle_${addNewField}`} id={`others_toggle_${addNewField}`} onChange={handleInputChange(setOtherToggle)} checked={otherToggle} /> <label htmlFor={`others_toggle_${addNewField}`}>Toggle</label>
                 </div>
                 <div className="mb-5">
-                    <input type='checkbox' name={`others_search_${addNewField}`} id={`others_search_${addNewField}`} onChange={(e) => setOtherSearch(e.target.checked)} checked={otherSearch} /> <label htmlFor={`others_search_${addNewField}`}>Search</label>
+                    <input type='checkbox' name={`others_search_${addNewField}`} id={`others_search_${addNewField}`} onChange={handleInputChange(setOtherSearch)} checked={otherSearch} /> <label htmlFor={`others_search_${addNewField}`}>Search</label>
                 </div>
                 <div className="mb-5">
-                    <input type='checkbox' name={`others_sorting_${addNewField}`} id={`others_sorting_${addNewField}`} onChange={(e) => setOtherSorting(e.target.checked)} checked={otherSorting} /> <label htmlFor={`others_sorting_${addNewField}`}>Sorting</label>
+                    <input type='checkbox' name={`others_sorting_${addNewField}`} id={`others_sorting_${addNewField}`} onChange={handleInputChange(setOtherSorting)} checked={otherSorting} /> <label htmlFor={`others_sorting_${addNewField}`}>Sorting</label>
                 </div>
                 <div className="mb-5">
-                    <input type='checkbox' name={`others_filter_${addNewField}`} id={`others_filter_${addNewField}`} onChange={(e) => setOtherFilter(e.target.checked)} checked={otherFilter} /> <label htmlFor={`others_filter_${addNewField}`}>Filter</label>
+                    <input type='checkbox' name={`others_filter_${addNewField}`} id={`others_filter_${addNewField}`} onChange={handleInputChange(setOtherFilter)} checked={otherFilter} /> <label htmlFor={`others_filter_${addNewField}`}>Filter</label>
                 </div>
             </div>
         </div>
     );
 }
+
+export default DcaForm;

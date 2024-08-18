@@ -46,9 +46,19 @@ export function toSnakeCase(str: string): string {
     .replace(/\s+/g, '_');
 }
 
-function toPascalCase(str: string): string {
+export function toPascalCase(str: string): string {
   return str
     .split(' ')                      // Split the string into words
     .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())  // Capitalize the first letter of each word
     .join('');                       // Join the words together without spaces
+}
+
+export function toCamelCase(str: string): string {
+  return str
+    .toLowerCase()
+    .split('_') 
+    .map((word, index) => 
+      index === 0 ? word.charAt(0).toUpperCase() + word.slice(1) : word.charAt(0).toUpperCase() + word.slice(1)
+    ) 
+    .join(''); 
 }

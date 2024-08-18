@@ -3,7 +3,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import archiver from "archiver";
 import { Readable } from "stream";
-import fs from "fs";
 import path from "path";
 import { processAndAddFileToZip, toSnakeCase } from "@/app/utils/fileUtils";
 
@@ -82,7 +81,7 @@ export async function POST(req: NextRequest) {
       if(wowJs){
         processAndAddFileToZip(archive, wowJsPath, `${bundleNameSnakeCase}/public/js/wow.min.js`, {});
       } 
-    } catch (err) {
+    } catch (err: any) {
       return NextResponse.json({ error: err.message }, { status: 500 });
     }
 
@@ -94,7 +93,7 @@ export async function POST(req: NextRequest) {
   archive.finalize();
 
   // Create a readable stream from the archive
-  const archiveStream = Readable.from(archive);
+  const archiveStream: any = Readable.from(archive);
 
   // Return the ZIP file as a response
   return new NextResponse(archiveStream, {
