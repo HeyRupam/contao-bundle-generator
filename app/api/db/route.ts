@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { toCamelCase, toPascalCase, toSnakeCase } from "@/app/utils/fileUtils";
 
+type DefaultFields = {
+    id?: boolean;
+    pid?: boolean;
+    ptable?: boolean;
+    ctable?: boolean;
+    tstamp?: boolean;
+    sorting?: boolean;
+    [key: string]: any;
+};
 export async function POST(req: NextRequest) {
     const body = await req.json();
     const { tableName, defaultFields, dcaFormsData } = body;
@@ -15,7 +24,7 @@ export async function POST(req: NextRequest) {
     }
     return NextResponse.json({ success: true, entityContent: entityContent, repositoryContent: repositoryContent, dcaContent: dcaContent });
 }
-function Entity( tableName: string, defaultFields: any[], dcaFormsData: any[]) {
+function Entity( tableName: string, defaultFields: DefaultFields, dcaFormsData: any[]) {
     const content = `<?php
 
 /*
@@ -47,7 +56,7 @@ class ${toCamelCase(tableName)}
     return content;
 };
 
-function Repository (tableName: string, defaultFields: any[], dcaFormsData: any[]) {
+function Repository (tableName: string, defaultFields: DefaultFields, dcaFormsData: any[]) {
     const content = `<?php
 declare(strict_types=1);
 
@@ -85,9 +94,7 @@ class ${toCamelCase(tableName)}Repository extends ServiceEntityRepository
     return content;
 };
 
-function Dca(tableName: string, defaultFields: any[], dcaFormsData: any[]) {
-    
-
+function Dca(tableName: string, defaultFields: DefaultFields, dcaFormsData: any[]) {
     const idContent = `'id' => array
 		(
 			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
@@ -189,9 +196,9 @@ $GLOBALS['TL_DCA']['${tableName}'] = array(
     // Fields
     'fields' => array(
         ${defaultFields.id ? idContent : ''}
-		${defaultFields.pid ? pidContent : ''}
-		${defaultFields.ptable ? ptableContent : ''}
-		${defaultFields.ctable ? ctableContent : ''}
+        ${defaultFields.pid ? pidContent : ''}
+        ${defaultFields.ptable ? ptableContent : ''}
+        ${defaultFields.ctable ? ctableContent : ''}
         ${defaultFields.tstamp ? tstampContent : ''}
         ${defaultFields.sorting ? sortingContent : ''}        
     )
