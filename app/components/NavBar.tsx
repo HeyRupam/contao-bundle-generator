@@ -10,8 +10,8 @@ const NavBar = () => {
       <ul className="flex space-x-4">
         <li>
           <Link href="/"
-              className={`text-white hover:text-gray-400 ${
-                pathname === '/' ? 'text-blue-500' : ''
+              className={`hover:text-gray-400 ${
+                pathname === '/' ? 'text-blue-500' : 'text-white'
               }`}
             >
               Bundle Generator
@@ -20,8 +20,8 @@ const NavBar = () => {
         <li>|</li>
         <li>
           <Link href="/database"
-              className={`text-white hover:text-gray-400 ${
-                pathname === '/database' ? 'text-blue-500' : ''
+              className={`hover:text-gray-400 ${
+                pathname === '/database' ? 'text-blue-500' : 'text-white'
               }`}
             >
               Database
