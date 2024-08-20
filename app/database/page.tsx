@@ -2,6 +2,7 @@
 
 import { FC, useState, useRef } from "react";
 import DbForm from "../components/DbForm";
+import { ClipboardDocumentIcon, CheckIcon } from '@heroicons/react/24/solid';
 
 const Home: FC = () => {
   const [entity, setEntity] = useState('');
@@ -48,13 +49,13 @@ const Home: FC = () => {
     <main className="min-h-screen">
       <DbForm onSubmit={handleFormSubmit} />
       {entity &&
-        <div className="relative border border-gray-300 p-4 text-center">
+        <div className="relative m-5 border border-gray-300 p-4 text-center">
           <button
             onClick={() => handleCopy(entity, 'entity')}
             disabled={copied === 'entity'}
-            className={`absolute top-2 right-2 px-4 py-2 text-white rounded-lg ${copied === 'entity' ? 'bg-green-500' : 'bg-blue-500 hover:bg-blue-600'}`}
+            className={`absolute top-2 right-2 px-4 py-2 border rounded-lg ${copied === 'entity' ? 'border-green-500 text-green-500' : 'border-blue-500 text-blue-500'}`}
           >
-            {copied === 'entity' ? 'Copied' : 'Copy'}
+            {copied === 'entity' ? <CheckIcon className="h-6 w-6" /> : <ClipboardDocumentIcon className="h-6 w-6" />}
           </button>
           <label htmlFor="entity">Entity Content</label>
           <textarea
@@ -62,47 +63,47 @@ const Home: FC = () => {
             ref={textareaRef}
             rows={20}
             value={entity}
-            className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="block mt-5 p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             id="entity"
             readOnly
           />
         </div>
       }
       {repository &&
-        <div className="relative border border-gray-300 p-4 text-center">
+        <div className="relative m-5 border border-gray-300 p-4 text-center">
           <button
             onClick={() => handleCopy(repository, 'repository')}
             disabled={copied === 'repository'}
-            className={`absolute top-2 right-2 px-4 py-2 text-white rounded-lg ${copied === 'repository' ? 'bg-green-500' : 'bg-blue-500 hover:bg-blue-600'}`}
+            className={`absolute top-2 right-2 px-4 py-2 border rounded-lg ${copied === 'repository' ? 'border-green-500 text-green-500' : 'border-blue-500 text-blue-500'}`}
           >
-            {copied === 'repository' ? 'Copied' : 'Copy'}
+            {copied === 'repository' ? <CheckIcon className="h-6 w-6" /> : <ClipboardDocumentIcon className="h-6 w-6" />}
           </button>
           <label htmlFor="repository">Repository Content</label>
           <textarea
             name="repository"
             rows={20}
             value={repository}
-            className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="block mt-5 p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             id="repository"
             readOnly
           />
         </div>
       }
       {dca &&
-        <div className="relative border border-gray-300 p-4 text-center">
+        <div className="relative m-5 border border-gray-300 p-4 text-center">
           <button
             onClick={() => handleCopy(dca, 'dca')}
             disabled={copied === 'dca'}
-            className={`absolute top-2 right-2 px-4 py-2 text-white rounded-lg ${copied === 'dca' ? 'bg-green-500' : 'bg-blue-500 hover:bg-blue-600'}`}
+            className={`absolute top-2 right-2 px-4 py-2 rounded-lg border ${copied === 'dca' ? 'border-green-500 text-green-500' : 'border-blue-500 text-blue-500'}`}
           >
-            {copied === 'dca' ? 'Copied' : 'Copy'}
+            {copied === 'dca' ? <CheckIcon className="h-6 w-6" /> : <ClipboardDocumentIcon className="h-6 w-6" />}
           </button>
           <label htmlFor="dca">Dca Content</label>
           <textarea
             name="dca"
             rows={20}
             value={dca}
-            className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="block mt-5 p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             id="dca"
             readOnly
           />

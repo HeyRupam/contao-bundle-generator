@@ -25,6 +25,37 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true, entityContent: entityContent, repositoryContent: repositoryContent, dcaContent: dcaContent });
 }
 function Entity( tableName: string, defaultFields: DefaultFields, dcaFormsData: any[]) {
+    let fields = '';
+    let getterSetters = '';
+    
+    dcaFormsData.forEach(element => {
+        
+        fields += `    /**
+     * @ORM\Column(type="${element.sqlType}", length=${element.sqlLength}, ${element.sqlNullable ? 'nullable=true' : ''}, options={"default": "${element.sqlDefault}"${element.sqlUnsigned ? ', unsigned=true' : ''}})
+     */
+    protected $${element.field};\n`;
+
+        getterSetters += `    /**
+     * Get the ${element.field}.
+     *
+     * @return resource|null
+     */
+    public function get${toPascalCase(element.field)}()
+    {
+        return $this->${element.field};
+    }
+
+    /**
+     * Set the ${element.field}.
+     *
+     * @param resource|null $${element.field}
+     */
+    public function set${toPascalCase(element.field)}($${element.field})
+    {
+        $this->${element.field} = $${element.field};
+    }\n`;
+    });
+    
     const content = `<?php
 
 /*
@@ -34,6 +65,8 @@ function Entity( tableName: string, defaultFields: DefaultFields, dcaFormsData: 
     *
     * @license LGPL-3.0-or-later
 */
+
+###Copyright###
 
 namespace ###Namespace###\\Entity;
 
@@ -48,7 +81,8 @@ use Symfony\\Component\\Security\\Core\\User\\UserInterface;
 */
 class ${toCamelCase(tableName)}
 {
-    
+${fields}
+${getterSetters}
    
                     
 }`;
@@ -59,6 +93,7 @@ class ${toCamelCase(tableName)}
 function Repository (tableName: string, defaultFields: DefaultFields, dcaFormsData: any[]) {
     const content = `<?php
 declare(strict_types=1);
+###Copyright###
 
 namespace ###Namespace###\\Repository;
 
@@ -121,8 +156,28 @@ function Dca(tableName: string, defaultFields: DefaultFields, dcaFormsData: any[
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),`;
 
+    let fieldContents = '';
+
+    
+    dcaFormsData.forEach(element => {
+        console.log(element);
+        
+        fieldContents += `        '${element.field}' => array(
+            'label'                      => &$GLOBALS['TL_LANG']['${tableName}']['${element.field}'],
+            ${element.otherExclude ? `'exclude'                 => true,` : ''}
+            ${element.otherToggle ? `'toggle'                      => true,` : ''}
+            ${element.otherSearch ? `'search'                      => true,` : ''}
+            ${element.otherSorting ? `'sorting'                      => true,` : ''}
+            ${element.otherFilter ? `'filter'                      => true,` : ''}
+            'inputType'             => '${element.fieldType}',
+            ${element.optionsValue ? `'options'                 => [${element.optionsValue}],` : ''}
+            'eval'                       => [${element.evals}],
+            'sql'                         => "varchar(100) NOT NULL DEFAULT ''"
+        ),\n`;       
+        
+    });
+
     const content = `<?php 
-if (!defined('TL_ROOT')) die('You can not access this file directly!');
 
 ###Copyright###
 
@@ -200,7 +255,8 @@ $GLOBALS['TL_DCA']['${tableName}'] = array(
         ${defaultFields.ptable ? ptableContent : ''}
         ${defaultFields.ctable ? ctableContent : ''}
         ${defaultFields.tstamp ? tstampContent : ''}
-        ${defaultFields.sorting ? sortingContent : ''}        
+        ${defaultFields.sorting ? sortingContent : ''}       
+${fieldContents} 
     )
 );
 `;

@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import archiver from "archiver";
 import { Readable } from "stream";
 import path from "path";
-import { processAndAddFileToZip, toSnakeCase } from "@/app/utils/fileUtils";
+import { processAndAddFileToZip, toSnakeCase, toPascalCase } from "@/app/utils/fileUtils";
 
 export async function POST(req: NextRequest) {
   // Extract any necessary data from the request body if needed
@@ -51,13 +51,13 @@ export async function POST(req: NextRequest) {
       processAndAddFileToZip(archive, composerPath, `${bundleNameSnakeCase}/composer.json`, {bundleName, namespace});
       processAndAddFileToZip(archive, lisencePath, `${bundleNameSnakeCase}/LICENSE`, {});
       processAndAddFileToZip(archive, phputilPath, `${bundleNameSnakeCase}/phpunit.xml.dist`, {});
-      processAndAddFileToZip(archive, bundleNamePath, `${bundleNameSnakeCase}/src/BundleName.php`, {bundleName, namespace, copyright});
-      processAndAddFileToZip(archive, bundleNameExtensionPath, `${bundleNameSnakeCase}/src/DependencyInjection/BundleNameExtension.php`, {bundleName, namespace, copyright});
+      processAndAddFileToZip(archive, bundleNamePath, `${bundleNameSnakeCase}/src/${toPascalCase(bundleName)}.php`, {bundleName, namespace, copyright});
+      processAndAddFileToZip(archive, bundleNameExtensionPath, `${bundleNameSnakeCase}/src/DependencyInjection/${toPascalCase(bundleName)}Extension.php`, {bundleName, namespace, copyright});
       processAndAddFileToZip(archive, (route? PluginWithRoutePath : PluginPath), `${bundleNameSnakeCase}/src/ContaoManager/Plugin.php`, {bundleName, namespace, copyright});
       processAndAddFileToZip(archive, configPath, `${bundleNameSnakeCase}/contao/config/config.php`, {bundleName, copyright});
       processAndAddFileToZip(archive, servicesPath, `${bundleNameSnakeCase}/config/services.yaml`, {});
       if(route){
-        processAndAddFileToZip(archive, routesPath, `${bundleNameSnakeCase}/config/routes.yaml`, {});
+        processAndAddFileToZip(archive, routesPath, `${bundleNameSnakeCase}/config/routes.yaml`, {bundleName, namespace});
         processAndAddFileToZip(archive, routesPath, `${bundleNameSnakeCase}/src/Controller/`, {});
       }
       if(bootstrapCss){
