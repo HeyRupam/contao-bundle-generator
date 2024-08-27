@@ -1,0 +1,22 @@
+<?php
+/**
+* @package   [###bundle_name###]
+###Copyright###
+*/
+
+namespace ###Namespace###\###BundleName###\Corn;
+
+use Contao\CoreBundle\ServiceAnnotation\CronJob;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
+use Contao\CoreBundle\Controller\AbstractController;
+
+/** 
+ * @CronJob("hourly")
+ */
+class ###ElementName### extends AbstractController{
+
+    public function __invoke()
+    {
+       
+    }
+}

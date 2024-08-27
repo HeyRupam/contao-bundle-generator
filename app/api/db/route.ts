@@ -160,7 +160,6 @@ function Dca(tableName: string, defaultFields: DefaultFields, dcaFormsData: any[
 
     
     dcaFormsData.forEach(element => {
-        console.log(element);
         
         fieldContents += `        '${element.field}' => array(
             'label'                      => &$GLOBALS['TL_LANG']['${tableName}']['${element.field}'],
@@ -171,8 +170,7 @@ function Dca(tableName: string, defaultFields: DefaultFields, dcaFormsData: any[
             ${element.otherFilter ? `'filter'                      => true,` : ''}
             'inputType'             => '${element.fieldType}',
             ${element.optionsValue ? `'options'                 => [${element.optionsValue}],` : ''}
-            'eval'                       => [${element.evals}],
-            'sql'                         => "varchar(100) NOT NULL DEFAULT ''"
+            'eval'                       => [${element.evals}]
         ),\n`;       
         
     });

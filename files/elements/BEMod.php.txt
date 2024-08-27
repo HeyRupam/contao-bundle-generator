@@ -1,0 +1,27 @@
+<?php
+
+/**
+* @package   [###bundle_name###]
+###Copyright###
+*/
+
+/**
+ * Namespace
+ */
+namespace ###Namespace###\###BundleName###\BEMod;
+use Contao\BackendModule;
+
+class ###ElementName### extends BackendModule
+{
+	/**
+	 * Template
+	 * @var string
+	 */
+	protected $strTemplate = '###element_name###';
+	
+	protected function compile(){
+		
+    }
+}
+
+class_alias(###ElementName###::class, '###ElementName###');

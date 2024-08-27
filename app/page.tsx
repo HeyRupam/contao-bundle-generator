@@ -4,13 +4,14 @@ import ReplaceForm from './components/ReplaceForm';
 import { FC } from 'react';
 
 const Home: FC = () => {
-  const handleFormSubmit = async (name: string, namespace: string, copyright: string, route: boolean, bootstrapCss: boolean, fontAwesomeCss: boolean, fancyboxCss: boolean, bootstrapJs: boolean, fancyboxJs: boolean, jqueryJs: boolean, wowJs: boolean) => {
+  const handleFormSubmit = async (name: string, namespace: string, copyright: string, route: boolean, bootstrapCss: boolean, fontAwesomeCss: boolean, fancyboxCss: boolean, bootstrapJs: boolean, fancyboxJs: boolean, jqueryJs: boolean, wowJs: boolean, elementsData: any[]) => {
+    console.log(elementsData);
     
     try {
       const response = await fetch('/api/bundle-generator', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bundleName: name, namespace: namespace, copyright: copyright, route: route, bootstrapCss: bootstrapCss, fontAwesomeCss: fontAwesomeCss, fancyboxCss: fancyboxCss, bootstrapJs: bootstrapJs, fancyboxJs: fancyboxJs, jqueryJs: jqueryJs, wowJs: wowJs }),
+        body: JSON.stringify({ bundleName: name, namespace: namespace, copyright: copyright, route: route, bootstrapCss: bootstrapCss, fontAwesomeCss: fontAwesomeCss, fancyboxCss: fancyboxCss, bootstrapJs: bootstrapJs, fancyboxJs: fancyboxJs, jqueryJs: jqueryJs, wowJs: wowJs, elementsData: elementsData }),
       });
       if (response.ok) {
         const bundleName = response.headers.get('X-Bundle-Name') || 'bundle';

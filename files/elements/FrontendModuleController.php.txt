@@ -1,0 +1,31 @@
+<?php
+/**
+* @package   [###bundle_name###]
+###Copyright###
+*/
+
+use Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController;
+use Contao\CoreBundle\ServiceAnnotation\FrontendModule;
+use Contao\ModuleModel;
+use Contao\Template;
+use Contao\PageModel;
+use Contao\BackendTemplate;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+/**
+ * @FrontendModule("###element_name###", category="###bundle_name###", template="frontend_module/###element_name###")
+ */
+class ###ElementName### extends AbstractFrontendModuleController
+{
+    protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
+    {
+		$scope = $request->attributes->get('_scope');
+		if($scope == 'backend'){
+            $template = new BackendTemplate('be_wildcard');
+            return $template->getResponse();
+        }
+
+        return $template->getResponse();
+    }
+}

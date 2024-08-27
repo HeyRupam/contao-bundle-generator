@@ -5,6 +5,7 @@ interface ProcessAndAddFileOptions {
   bundleName?: string;
   namespace?: string;
   copyright?: string;
+  elementName?: string;
 }
 
 export function processAndAddFileToZip(
@@ -16,7 +17,8 @@ export function processAndAddFileToZip(
   const {
     bundleName = '',
     namespace = '',
-    copyright = ''
+    copyright = '',
+    elementName = '',
     } = options;
 
   let fileContent;
@@ -34,6 +36,8 @@ export function processAndAddFileToZip(
   fileContent = fileContent.replace(/###BundleName###/g, toPascalCase(bundleName));
   fileContent = fileContent.replace(/###Bundle_Name###/g, bundleName);
   fileContent = fileContent.replace(/###Copyright###/g, copyright);
+  fileContent = fileContent.replace(/###ElementName###/g, toPascalCase(elementName));
+  fileContent = fileContent.replace(/###element_name###/g, toSnakeCase(elementName));
 
 
   // Add the processed content to the ZIP archive

@@ -1,0 +1,41 @@
+<?php
+/**
+* @package   [###bundle_name###]
+###Copyright###
+*/
+
+namespace ###Namespace###\###BundleName###\Controller\ContentElement;
+
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\BackendTemplate;
+use Contao\ContentModel;
+use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
+use Contao\CoreBundle\ServiceAnnotation\ContentElement;
+use Contao\Template;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+
+/**
+ * @ContentElement("###element_name###", category="###bundle_name###", template="content_element/###element_name###")
+ */
+class ###ElementName### extends AbstractContentElementController
+{
+	public const TYPE = '###element_name###';
+	
+    protected function getResponse(Template $template, ContentModel $model, Request $request): Response
+    {
+
+        // For BE rendering
+		$scope = $request->attributes->get('_scope');
+		if($scope == 'backend'){
+            $template = new BackendTemplate('be_wildcard');
+            return $template->getResponse();
+        }
+        
+        return $template->getResponse();
+    }
+
+
+
+}
